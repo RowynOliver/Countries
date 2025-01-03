@@ -17,6 +17,8 @@ public class Main
   private ImageIcon img;
   private JLabel imageLabel;
   private JLabel outputLabel;
+
+  private JTextField input = new JTextField(20);
   
   public static void main(String[] args) {
     // Create the GUI
@@ -29,7 +31,7 @@ public class Main
   public void loadCountries() 
   {
     // Open the data file - do not change
-    File file = new File("countries-data.csv");
+    File file = new File("/workspaces/Countries/workspace/countries-data.csv");
     Scanner scan = null;
     try {
       scan = new Scanner(file);
@@ -38,7 +40,7 @@ public class Main
     }
     
     // Write a for loop that goes through the countryArray.
-    // for(int i ....) {
+    for(int i = 0; i < countryArray.length; i++) {
     // Do the following inside the loop
       String input = scan.nextLine();
       String[] data = input.split(",");
@@ -46,31 +48,40 @@ public class Main
       // inside the loop, create a new Country using your constructor with 3 arguments and pass in data[0], data[1], data[2], data[3] as arguments.
      // inside the loop, set countryArray[i] to the created Country object
      
-    
+      Country newCountry = new Country(data[0], data[1], data[2], data[3]);
+      countryArray[i] = newCountry;
+    }
   }
 
   /* showCountry() will show the image associated with the current country. It should get the country at index from the countryArray. It should use its get method to get its image file name and use the code below to put the image in the GUI.
   */
   public void showCountry() {
     // Get the country at index from countryArray
-    
+    Country c = countryArray[index];
     // Use its get method to get the its image file name and save it into imagefile variable below instead of worldmap.jpg.
-    String imagefile = "worldmap.jpg";
+    String cImg = c.getImg();
+    String imagefile = cImg;
     // Use the following code to create an new Image Icon and put it into the GUI
-    img = new ImageIcon(imagefile);
+    img = new ImageIcon("/workspaces/Countries/workspace/"+imagefile);
     imageLabel.setIcon(img);
   }
   
   /* nextButton should increment index. If the index is greater than 9, reset it back to 0. Clear the outputLabel to empty string using setText, and call showCountry();*/
   public void nextButtonClick()
   {
-    
+    index+=1;
+    if(index > 9){
+      index = 0;
+      
+      
+    }
+    showCountry();
   }
   
   /* reviewButton should get the country at index from the countryArray, call its toString() method and save the result, print it out with System.out.println and as an argument to outputLabel.setText( text to print out ); */
   public void reviewButtonClick()
   {
-     
+   outputLabel.setText(countryArray[index].toString());  
   }
 
   /* quizButton should clear the outputLabel (outputLabel.setText to empty string), get the country at index from countryArray, print out a question about it like What country is this? and/or What's this country's capital?. Get the user's answer using scan.nextLine() and check if it is equal to the country's data using its get methods and print out correct or incorrect.
@@ -78,9 +89,16 @@ public class Main
   public void quizButtonClick()
   {
     Scanner scan = new Scanner(System.in); 
+    outputLabel.setText("");
+    Country temp = countryArray[index];
     
-    
-    
+    showCountry();
+    outputLabel.setText("");
+    if(input.getText().equals(countryArray[index].getName())){
+      outputLabel.setText("Correct");
+    }else{
+      outputLabel.setText("Incorrect");
+    }
   }
 
 
@@ -96,14 +114,16 @@ public Main() {
         JButton reviewButton = new JButton("Review");
         JButton quizButton = new JButton("Quiz");
         JButton newButton = new JButton("Next");
+        
         jFrame.add(reviewButton);
         jFrame.add(quizButton);
         jFrame.add(newButton);
+        jFrame.add(input);
         
         // create a new image icon
-        img = new ImageIcon("worldmap.jpg");
+        img = new ImageIcon("/workspaces/Countries/workspace/worldmap.jpg");
         // create a label to display image
-        imageLabel = new JLabel(img);
+        imageLabel = new JLabel("What country is this?");
         // and one for output
         outputLabel = new JLabel();
         jFrame.add(imageLabel);
